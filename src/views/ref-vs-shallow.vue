@@ -6,10 +6,15 @@
     <code>shallowRef()</code> with complex objects to measure memory consumption
     and speed.
   </p>
+
+  <ViewRefs></ViewRefs>
 </template>
 
 <script>
+import ViewRefs from '../components/ref-vs-shallow/refs.vue'
+
 export default {
+  components: { ViewRefs },
   setup() {
     return {}
   },
