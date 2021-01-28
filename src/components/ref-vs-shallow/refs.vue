@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import { computed, nextTick, ref } from 'vue'
+import { computed, nextTick, unref, reactive, ref, watch } from 'vue'
 import {
   createComplexObject,
   delay,
@@ -54,11 +54,44 @@ export default {
     const shallowRefData = ref<any>()
     const elapsed = ref(0)
     const isRunning = ref(false)
-    const nesting = ref(5)
+    const nesting = ref(4)
+
+    const unwrapped = reactive({
+      refData,
+      shallowRefData,
+    })
 
     const computedRef = computed(() => getComplexObject(refData.value || {}))
     const computedShallowRef = computed(() =>
       getComplexObject(shallowRefData.value || {})
+    )
+
+    watch(
+      () => unwrapped.refData,
+      (data) => console.log(JSON.stringify(data)),
+      { deep: true }
+    )
+
+    watch(
+      () => unwrapped.shallowRefData,
+      (data) => console.log(JSON.stringify(data)),
+      { deep: true }
+    )
+
+    watch(
+      () => refData.value,
+      () => {
+        console.log('refData changed')
+      },
+      { deep: true }
+    )
+
+    watch(
+      () => shallowRefData.value,
+      () => {
+        console.log('shallowRef changed')
+      },
+      { deep: true }
     )
 
     let now: number = 0
@@ -105,6 +138,7 @@ export default {
 
     return {
       nesting,
+      unwrapped,
       refData,
       shallowRefData,
 

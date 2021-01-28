@@ -15,8 +15,5 @@ import ViewRefs from '../components/ref-vs-shallow/refs.vue'
 
 export default {
   components: { ViewRefs },
-  setup() {
-    return {}
-  },
 }
 </script>
