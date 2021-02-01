@@ -9,6 +9,8 @@ const staticRoutes: RouteRecordRaw[] = Object.keys(modules)
   .map((path) => ({
     // remove /views and .vue
     path: path.slice(7, -4),
+    // same but without leading slash
+    name: path.slice(8, -4),
     component: modules[path],
   }))
 

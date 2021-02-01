@@ -1,15 +1,6 @@
 <template>
   <div>
     <label>
-      Demo
-      <select v-model="textType">
-        <option>debounce</option>
-        <option>throttle</option>
-      </select>
-    </label>
-    <br />
-
-    <label>
       Delay {{ delay }}ms
       <br />
       <input type="range" min="0" max="1000" step="10" v-model.number="delay" />
@@ -25,6 +16,11 @@
     <p>
       Computed: <code>text.toUpperCase() = {{ upper }}</code>
     </p>
+
+    <label>
+      <input type="checkbox" v-model="callOutside" />
+      Eager update
+    </label>
 
     <label>
       Force refresh interval
@@ -57,7 +53,11 @@ import {
 } from 'vue'
 import { MaybeRef } from '../composables/utils'
 
-function useDebouncedRef<T>(value: T, delay: MaybeRef<number> = 200) {
+function useDebouncedRef<T>(
+  value: T,
+  delay: MaybeRef<number> = 200,
+  callOutside: MaybeRef<boolean> = true
+) {
   let timeout: number
   return customRef<T>((track, trigger) => {
     return {
@@ -68,43 +68,16 @@ function useDebouncedRef<T>(value: T, delay: MaybeRef<number> = 200) {
       set(newValue) {
         clearTimeout(timeout)
         // could be moved inside the setTimeout
-        value = newValue
-        console.log('set', newValue)
+        if (unref(callOutside)) {
+          value = newValue
+        }
+        console.log('set', unref(callOutside), newValue)
         timeout = setTimeout(() => {
+          if (!unref(callOutside)) {
+            value = newValue
+          }
           trigger()
         }, unref(delay))
-      },
-    }
-  })
-}
-
-function useThrottledRef<T>(value: T, interval: MaybeRef<number> = 200) {
-  return customRef<T>((track, trigger) => {
-    let intervalId: number
-    let shouldTrigger = true
-
-    watchEffect(() => {
-      clearInterval(intervalId)
-      intervalId = setInterval(() => {
-        if (shouldTrigger) {
-          trigger()
-          shouldTrigger = false
-        }
-      }, unref(interval))
-    })
-
-    onUnmounted(() => {
-      clearInterval(intervalId)
-    })
-
-    return {
-      get() {
-        track()
-        return value
-      },
-      set(newValue) {
-        value = newValue
-        shouldTrigger = true
       },
     }
   })
@@ -141,16 +114,16 @@ function useIntervalRefresh<T>(
 export default {
   setup() {
     const delay = ref(200)
+    const callOutside = ref(true)
     const interval = ref(1000)
     const textType = ref('debounce' as 'debounce' | 'throttle')
-    const text = useDebouncedRef('Change me', delay)
-    const textThrottled = useThrottledRef('Change me', delay)
+    const text = useDebouncedRef('Change me', delay, callOutside)
 
     const upper = computed(() => text.value.toUpperCase())
 
     const textUpper = useIntervalRefresh(text, interval)
 
-    return { textType, text, upper, delay, textUpper, interval }
+    return { textType, text, upper, delay, textUpper, interval, callOutside }
   },
 }
 </script>
