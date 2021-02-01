@@ -844,6 +844,11 @@ magic-string@^0.25.7:
   dependencies:
     sourcemap-codec "^1.4.4"
 
+mande@^0.0.23:
+  version "0.0.23"
+  resolved "https://registry.yarnpkg.com/mande/-/mande-0.0.23.tgz#48a31800614fc3f685b19f91bfc88e1702b233ab"
+  integrity sha512-sr4QhcfakHMhkPSlDKqXbnI2FnabbLjvv8SzjSNIrGYFBY5lzxxhtKZgn+Viqb/iASNzfmur9BnB9jBg7R5C1A==
+
 merge-source-map@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/merge-source-map/-/merge-source-map-1.1.0.tgz#2fdde7e6020939f70906a68f2d7ae685e4c8c646"

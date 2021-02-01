@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import RefsVsShallow from './views/ref-vs-shallow.vue'
+import { getMemes, Meme } from './api/imgflip'
+import { getRandomJoke, Joke } from './api/jokes'
 import NotFound from './views/not-found.vue'
 
 const modules = import.meta.glob('./views/*.vue')
@@ -22,3 +23,18 @@ export const router = createRouter({
     { path: '/:catchAll(.*)', component: NotFound },
   ],
 })
+
+router.beforeResolve(async (to) => {
+  if (to.name === 'data-fetching-meta') {
+    to.meta.memes = await getMemes()
+  } else if (to.name === 'data-fetching-jokes') {
+    to.meta.joke = await getRandomJoke()
+  }
+})
+
+declare module 'vue-router' {
+  export interface RouteMeta {
+    memes: Meme[]
+    joke: Joke
+  }
+}
