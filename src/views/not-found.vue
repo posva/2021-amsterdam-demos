@@ -18,12 +18,9 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { staticRoutes } from '../router'
 
 const modules = import.meta.glob('./*.vue')
 
-const links = computed(() =>
-  Object.keys(modules)
-    .filter((path) => path !== './not-found.vue')
-    .map((path) => path.slice(1, -4))
-)
+const links = computed(() => staticRoutes.map((route) => route.path))
 </script>

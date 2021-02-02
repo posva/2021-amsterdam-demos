@@ -5,8 +5,14 @@ import NotFound from './views/not-found.vue'
 
 const modules = import.meta.glob('./views/*.vue')
 
-const staticRoutes: RouteRecordRaw[] = Object.keys(modules)
-  .filter((path) => path !== './views/not-found.vue')
+const ROUTES_TO_SKIP = [
+  'not-found',
+  'go-back',
+  // 'ref-vs-shallow'
+].map((name) => `./views/${name}.vue`)
+
+export const staticRoutes: RouteRecordRaw[] = Object.keys(modules)
+  .filter((path) => !ROUTES_TO_SKIP.includes(path))
   .map((path) => ({
     // remove /views and .vue
     path: path.slice(7, -4),
