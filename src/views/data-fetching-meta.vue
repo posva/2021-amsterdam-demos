@@ -1,9 +1,18 @@
 <template>
   <div>Data fetching</div>
   <section class="masonry">
-    <div v-for="meme in memes" class="item">
+    <figure
+      v-for="meme in memes"
+      class="item"
+      :id="`${meme.name}_${meme.id}`"
+      :title="meme.name"
+      :key="meme.id"
+    >
       <img class="item__content" :src="meme.url" :alt="meme.name" />
-    </div>
+      <figcaption>
+        <a :href="`#${meme.name}_${meme.id}`">{{ meme.name }}</a>
+      </figcaption>
+    </figure>
   </section>
 </template>
 
@@ -21,33 +30,52 @@ export default {
 </script>
 
 <style scoped>
-/* .masonry {
+img {
+  max-width: 100%;
+  display: block;
+  margin-bottom: 0;
+}
+
+figure {
+  margin: 0;
   display: grid;
-  grid-auto-flow: column;
-  gap: 1rem;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  grid-auto-rows: 250px;
-} */
+  grid-template-rows: 1fr auto;
+  margin-bottom: 10px;
+  break-inside: avoid;
+}
+
+figure > img {
+  grid-row: 1 / -1;
+  grid-column: 1;
+}
+
+figure a {
+  color: black;
+  text-decoration: none;
+}
+
+figcaption {
+  grid-row: 2;
+  grid-column: 1;
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 0.2em 0.5em;
+  justify-self: start;
+}
 
 .masonry {
-  display: flex;
-  flex-flow: column wrap;
-  width: 100%;
-  height: 800px;
-  overflow: auto;
+  column-count: 3;
+  column-gap: 10px;
 }
 
-.item {
-  box-sizing: border-box;
-  padding: 10px;
-  counter-increment: item-counter;
+@media screen and (max-width: 1024px) {
+  .masonry {
+    column-count: 2;
+  }
 }
 
-.item__content {
-  background: purple;
-}
-
-.masonry img {
-  width: 128px;
+@media screen and (max-width: 500px) {
+  .masonry {
+    column-count: 1;
+  }
 }
 </style>
