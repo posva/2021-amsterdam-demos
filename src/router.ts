@@ -1,13 +1,14 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import { getMemes, Meme } from './api/imgflip'
 import { getRandomJoke, Joke } from './api/jokes'
+import GoBack from './views/go-back.vue'
 import NotFound from './views/not-found.vue'
 
 const modules = import.meta.glob('./views/*.vue')
 
 const ROUTES_TO_SKIP = [
   'not-found',
-  // 'go-back',
+  'go-back',
   // 'ref-vs-shallow'
 ].map((name) => `./views/${name}.vue`)
 
@@ -26,6 +27,7 @@ export const router = createRouter({
   routes: [
     ...staticRoutes,
     // { path: '/ref-vs-shallow', component: RefsVsShallow },
+    { path: '/go-back', component: GoBack },
     { path: '/:catchAll(.*)', component: NotFound },
   ],
 })
