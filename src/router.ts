@@ -7,7 +7,7 @@ const modules = import.meta.glob('./views/*.vue')
 
 const ROUTES_TO_SKIP = [
   'not-found',
-  'go-back',
+  // 'go-back',
   // 'ref-vs-shallow'
 ].map((name) => `./views/${name}.vue`)
 
