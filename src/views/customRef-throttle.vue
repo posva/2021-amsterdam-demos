@@ -46,6 +46,7 @@
 import {
   computed,
   customRef,
+  onDeactivated,
   onUnmounted,
   ref,
   Ref,
@@ -56,11 +57,12 @@ import { MaybeRef } from '../composables/utils'
 
 function useThrottledRef<T>(value: T, interval: MaybeRef<number> = 200) {
   return customRef<T>((track, trigger) => {
-    let intervalId: number
     let shouldTrigger = true
+    let intervalId: number
+    const clearTimer = () => clearInterval(intervalId)
 
     watchEffect(() => {
-      clearInterval(intervalId)
+      clearTimer()
       intervalId = setInterval(() => {
         if (shouldTrigger) {
           trigger()
@@ -69,9 +71,8 @@ function useThrottledRef<T>(value: T, interval: MaybeRef<number> = 200) {
       }, unref(interval))
     })
 
-    onUnmounted(() => {
-      clearInterval(intervalId)
-    })
+    onDeactivated(clearTimer)
+    onUnmounted(clearTimer)
 
     return {
       get() {
@@ -79,8 +80,8 @@ function useThrottledRef<T>(value: T, interval: MaybeRef<number> = 200) {
         return value
       },
       set(newValue) {
+        shouldTrigger = newValue !== value
         value = newValue
-        shouldTrigger = true
       },
     }
   })
