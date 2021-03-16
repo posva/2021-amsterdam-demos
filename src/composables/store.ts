@@ -42,3 +42,13 @@ export function useStore() {
 
   return { state, double }
 }
+
+const state = reactive({ counter: 0 })
+export function useGlobalStore() {
+  const double = computed(() => state.counter * 2)
+  watchEffect(() => {
+    console.log(`Count is ${state.counter}`)
+  })
+
+  return { state, double }
+}

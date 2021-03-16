@@ -13,7 +13,11 @@
       <li>Go <router-link to="/go-back">somewhere else</router-link> to destroy this component.</li>
       <li>Increment the counter again.</li>
       <li>See how <b>the double</b> doesn't change anymore.</li>
-      <li v-if="!$route.query.fix">Now try <router-link :to="{ query: {fix: 'yes'}}">using the working store</router-link>.</li>
+      <li v-if="!$route.query.fix">
+        Now try <router-link :to="{ query: {fix: 'yes'}}">the working store</router-link><br>
+        or the <router-link :to="{ query: {fix: 'global'}}">the working global store</router-link>
+        .
+      </li>
       <li v-else>Or <router-link :to="{ query: {}}">switch back to the broken one</router-link>.</li>
       <li>Go <router-link to="/go-back">somewhere else</router-link> again.</li>
       <li>Increment the counter 💫 .</li>
@@ -24,15 +28,20 @@
 <script lang="ts">
 import { computed, defineComponent } from 'vue'
 import { useRoute } from 'vue-router'
-import { useBrokenStore, useStore } from '../composables/store'
+import { useBrokenStore, useGlobalStore, useStore } from '../composables/store'
 
 export default defineComponent({
   setup() {
     const route = useRoute()
     const brokenStore = useBrokenStore()
     const workingStore = useStore()
+    const globalStore = useGlobalStore()
 
-    const store = computed(() => route.query.fix ? workingStore : brokenStore)
+    const store = computed(() => {
+      if (route.query.fix === 'yes') return workingStore
+      if (route.query.fix === 'global') return globalStore
+      return brokenStore
+    })
 
     return { store }
   },
