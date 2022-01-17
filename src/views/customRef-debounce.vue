@@ -118,6 +118,7 @@ export default {
     const interval = ref(1000)
     const textType = ref('debounce' as 'debounce' | 'throttle')
     const text = useDebouncedRef('Change me', delay, callOutside)
+    // const text = ref('Change me')
 
     const upper = computed(() => text.value.toUpperCase())
 
